@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan - My Leads</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i data-lucide="layout-grid" class="logo-icon"></i>
+                    <span class="logo-text">Plan</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-item">
+                    <i data-lucide="bar-chart-2"></i>
+                    <span>Overview</span>
+                </div>
+                <div class="nav-item active">
+                    <div class="nav-item-content">
+                        <i data-lucide="users"></i>
+                        <span>Contacts</span>
+                    </div>
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                </div>
+                <div class="sub-nav">
+                    <div class="sub-nav-item active">Leads</div>
+                    <div class="sub-nav-item">Referral Partners</div>
+                </div>
+                <div class="nav-item">
+                    <i data-lucide="briefcase"></i>
+                    <span>Deals</span>
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                </div>
+                <div class="nav-item">
+                    <i data-lucide="layers"></i>
+                    <span>Integration</span>
+                </div>
+                <div class="nav-item">
+                    <i data-lucide="check-square"></i>
+                    <span>Tasks</span>
+                </div>
+                <!-- Lead Form Link Removed -->
+
+                <!-- Gmail Connection -->
+                <div class="gmail-sidebar-status" id="gmail-sidebar-status">
+                    <div id="gmail-status-dot" class="status-dot"></div>
+                    <span id="gmail-status-text">Gmail Not Connected</span>
+                </div>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="nav-item">
+                    <i data-lucide="settings"></i>
+                    <span>Settings</span>
+                </div>
+                <div class="nav-item theme-item">
+                    <i data-lucide="moon"></i>
+                    <span>Dark Mode</span>
+                    <div class="toggle-switch" id="sidebar-theme-toggle">
+                        <div class="toggle-circle"></div>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <i data-lucide="help-circle"></i>
+                    <span>Help & Support</span>
+                    <span class="badge">8</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="search-bar">
+                    <i data-lucide="search"></i>
+                    <input type="text" placeholder="Search or type a command">
+                </div>
+                <div class="header-actions">
+                    <button class="btn secondary ai-btn" id="ai-sidebar-toggle">
+                        <i data-lucide="sparkles"></i> AI Assistant
+                    </button>
+                    <button class="icon-btn" id="theme-toggle">
+                        <i data-lucide="sun" class="sun-icon"></i>
+                        <i data-lucide="moon" class="moon-icon"></i>
+                    </button>
+                    <button class="icon-btn"><i data-lucide="zap"></i></button>
+                    <button class="icon-btn"><i data-lucide="user-plus"></i></button>
+                    <button class="icon-btn"><i data-lucide="bell"></i></button>
+                    <div class="user-avatar">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="User Avatar">
+                        <i data-lucide="chevron-down"></i>
+                    </div>
+                </div>
+            </header>
+
+            <section class="content-body">
+                <div class="page-header">
+                    <div class="breadcrumb">Contacts</div>
+                    <div class="title-row">
+                        <h1>My Leads <span class="count" id="lead-count">101 Leads</span></h1>
+                        <div class="action-buttons">
+                            <button class="btn secondary">Settings</button>
+                            <button class="btn primary">Export All</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tabs-container">
+                    <div class="tabs">
+                        <div class="tab active" data-view="leads-view">Leads</div>
+                        <div class="tab" data-view="referral-view">Referral Partners</div>
+                        <div class="tab" data-view="outreach-view">AI Outreach</div>
+                        <div class="tab" data-view="sales-view">Sales</div>
+                    </div>
+                </div>
+
+                <div class="view-container">
+                    <!-- Leads View -->
+                    <div id="leads-view" class="dashboard-view active">
+                        <div class="toolbar">
+                            <div class="search-inner">
+                                <i data-lucide="search"></i>
+                                <input type="text" placeholder="Search...">
+                            </div>
+                            <div class="toolbar-actions">
+                                <button class="toolbar-btn"><i data-lucide="filter"></i></button>
+                                <button class="btn primary" id="import-leads-btn-standalone"
+                                    style="padding: 8px 16px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+                                    <i data-lucide="upload" style="width: 16px; height: 16px;"></i>
+                                    Import
+                                </button>
+                                <div class="export-dropdown" style="position: relative; display: inline-block;">
+                                    <button class="btn primary" id="export-leads-dropdown-btn"
+                                        style="padding: 8px 16px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+                                        <i data-lucide="download" style="width: 16px; height: 16px;"></i>
+                                        Export
+                                        <i data-lucide="chevron-down" style="width: 14px; height: 14px;"></i>
+                                    </button>
+                                    <div id="export-leads-menu" class="export-menu"
+                                        style="display: none; position: absolute; top: 100%; right: 0; margin-top: 8px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); min-width: 200px; z-index: 1000;">
+                                        <button id="export-leads-action-btn"
+                                            style="width: 100%; padding: 12px 16px; text-align: left; background: none; border: none; color: var(--text-primary); cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 14px;">
+                                            <i data-lucide="users"
+                                                style="width: 16px; height: 16px; color: #6c5dd3;"></i>
+                                            Export Leads List
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+
+                                        <th>NAME</th>
+                                        <th>COMPANY</th>
+                                        <th>PHONE#</th>
+                                        <th>EMAILS</th>
+                                        <th>ASSIGNED TO</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="leads-table-body">
+                                    <!-- Dynamic Content -->
+                                </tbody>
+                            </table>
+                            <!-- Leads Table Pagination -->
+                            <footer class="pagination" id="leads-pagination">
+                                <!-- Pagination rendered by JS -->
+                            </footer><br>
+                        </div>
+                    </div>
+
+                    <!-- Outreach View -->
+                    <div id="outreach-view" class="dashboard-view">
+                        <div class="outreach-hero">
+                            <div class="outreach-card">
+                                <div class="outreach-icon">
+                                    <i data-lucide="mail"></i>
+                                </div>
+                                <h2>AI Campaign Builder</h2>
+                                <p>Automate your cold outreach. Generate personalized emails and promotions for your
+                                    leads in seconds.</p>
+                                <button class="btn primary launch-ai-outreach" id="launch-outreach-btn">
+                                    <i data-lucide="message-square"></i> Open Outreach Assistant
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sales View -->
+                    <div id="sales-view" class="dashboard-view">
+                        <div class="toolbar">
+                            <div class="search-inner">
+                                <i data-lucide="search"></i>
+                                <input type="text" placeholder="Search sales...">
+                            </div>
+                            <div class="toolbar-actions">
+                                <button class="toolbar-btn"><i data-lucide="filter"></i></button>
+                                <button class="btn primary" id="import-file-btn-standalone"
+                                    style="padding: 8px 16px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+                                    <i data-lucide="upload" style="width: 16px; height: 16px;"></i>
+                                    Import
+                                </button>
+                                <div class="export-dropdown" style="position: relative; display: inline-block;">
+                                    <button class="btn primary" id="export-dropdown-btn"
+                                        style="padding: 8px 16px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+                                        <i data-lucide="download" style="width: 16px; height: 16px;"></i>
+                                        Export
+                                        <i data-lucide="chevron-down" style="width: 14px; height: 14px;"></i>
+                                    </button>
+                                    <div id="export-menu" class="export-menu"
+                                        style="display: none; position: absolute; top: 100%; right: 0; margin-top: 8px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); min-width: 200px; z-index: 1000;">
+                                        <button id="export-leads-btn"
+                                            style="width: 100%; padding: 12px 16px; text-align: left; background: none; border: none; color: var(--text-primary); cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 14px;">
+                                            <i data-lucide="users"
+                                                style="width: 16px; height: 16px; color: #6c5dd3;"></i>
+                                            Export Leads List
+                                        </button>
+                                        <button id="export-sales-btn"
+                                            style="width: 100%; padding: 12px 16px; text-align: left; background: none; border: none; color: var(--text-primary); cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 14px;">
+                                            <i data-lucide="file-spreadsheet"
+                                                style="width: 16px; height: 16px; color: #10b981;"></i>
+                                            Export Sales List
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Sale_ID</th>
+                                        <th>Date</th>
+                                        <th>Drone_Model</th>
+                                        <th>Category</th>
+                                        <th>Units</th>
+                                        <th>Unit_Price</th>
+                                        <th>Region</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sales-table-body">
+                                    <!-- Dynamic Sales Content -->
+                                </tbody>
+                            </table>
+
+                            <footer class="pagination" id="sales-pagination">
+                                <!-- Pagination rendered by JS -->
+                            </footer>
+                        </div>
+                    </div>
+
+                    <!-- Placeholder for Referral View -->
+                    <div id="referral-view" class="dashboard-view">
+                        <div class="empty-state">
+                            <p>Referral Partners view is currently empty.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+    <div class="ai-sidebar" id="ai-sidebar">
+        <div class="ai-sidebar-header">
+            <div class="ai-title">
+                <i data-lucide="zap" style="color: #6c5dd3;"></i>
+                <span>Antigravity Hybrid AI</span>
+            </div>
+            <button class="close-btn" id="close-ai-sidebar"><i data-lucide="x"></i></button>
+        </div>
+        <div class="ai-sidebar-content">
+            <div class="ai-chat-history" id="ai-chat-history">
+                <div class="ai-msg bot">Greetings! I am Antigravity. I am ready to help you manage your 101 leads at
+                    introvertpiratevampire@gmail.com. How can I assist you?</div>
+                <!-- Chat messages will appear here -->
+            </div>
+            <div class="ai-suggestions">
+                <button class="suggest-btn" data-query="Summarize my top leads">Summarize top leads</button>
+                <button class="suggest-btn" data-query="Give me sales tips for James Paul Abid">Tips for James</button>
+                <button class="suggest-btn" data-query="Analyze lead distribution by company">Analyze companies</button>
+            </div>
+        </div>
+        <div class="ai-sidebar-footer">
+            <!-- File Staging Area -->
+            <div id="chat-file-staging"
+                style="display: none; padding: 8px 12px; background: var(--bg-secondary); border-top: 1px solid var(--border); border-radius: 8px 8px 0 0; margin: 0 12px;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="file-spreadsheet" style="width: 16px; height: 16px; color: #10b981;"></i>
+                        <span id="staged-file-name"
+                            style="font-size: 12px; color: var(--text-primary);">filename.xlsx</span>
+                    </div>
+                    <button id="remove-staged-file"
+                        style="background: none; border: none; cursor: pointer; padding: 4px;">
+                        <i data-lucide="x" style="width: 12px; height: 12px; color: var(--text-secondary);"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="ai-input-wrapper">
+                <input type="text" id="ai-input" placeholder="Ask AI or drag data file...">
+                <button id="send-ai-btn"><i data-lucide="send"></i></button>
+            </div>
+            <div class="ai-status">
+                <span class="status-dot online"></span>
+                <span>Ollama AI connected</span>
+            </div>
+        </div>
+    </div>
+    <!-- Outreach Chatbot Modal -->
+    <div class="modal-overlay" id="outreach-modal">
+        <div class="modal-content campaign-bot">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i data-lucide="mail" style="color: #6c5dd3;"></i>
+                    <span>Antigravity Hybrid Outreach</span>
+                </div>
+                <button class="close-btn" id="close-outreach-modal"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body chat-container">
+                <div class="ai-msg bot">
+                    Hello! I'm your Outreach Assistant. Tell me which leads you'd like to target or what kind of
+                    promotion you're running, and I'll draft the perfect emails for you.
+                </div>
+                <div id="outreach-chat-history"></div>powers
+            </div>
+            <div class="modal-footer">
+                <div class="chat-input-row">
+                    <input type="text" id="outreach-input"
+                        placeholder="e.g. Draft a cold email for Stark Industries leads...">
+                    <button class="btn primary" id="send-outreach-btn"><i data-lucide="send"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- File Import Modal -->
+    <div class="modal-overlay" id="import-modal" style="display: none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i data-lucide="upload" style="color: #6c5dd3;"></i>
+                    <span>Import Sales Data</span>
+                </div>
+                <button class="close-btn" id="close-import-modal"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div id="drop-zone"
+                    style="border: 2px dashed var(--border); border-radius: 12px; padding: 40px; text-align: center; background: var(--bg-secondary); cursor: pointer; transition: all 0.3s;">
+                    <i data-lucide="file-up"
+                        style="width: 48px; height: 48px; color: var(--text-secondary); margin: 0 auto 16px;"></i>
+                    <h3 style="margin: 0 0 8px; color: var(--text-primary); font-size: 16px;">Drag & Drop File Here</h3>
+                    <p style="margin: 0 0 16px; color: var(--text-secondary); font-size: 14px;">or click to browse</p>
+                    <button class="btn secondary" id="browse-file-btn">Browse Files</button>
+                    <input type="file" id="file-input" accept=".csv,.xlsx,.xls" style="display: none;">
+                    <p style="margin: 16px 0 0; color: var(--text-secondary); font-size: 12px;">Supported: CSV, Excel
+                        (.xlsx, .xls)</p>
+                </div>
+            </div>
+            <div id="file-preview" style="margin-top: 16px; display: none;">
+                <div
+                    style="padding: 12px; background: var(--bg-secondary); border-radius: 8px; display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i data-lucide="file-text" style="width: 20px; height: 20px; color: #10b981;"></i>
+                        <span id="file-name" style="font-size: 14px; color: var(--text-primary);"></span>
+                    </div>
+                    <button id="remove-file-btn"
+                        style="background: none; border: none; cursor: pointer; color: var(--text-secondary);">
+                        <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Target List Selection -->
+            <div style="margin-top: 20px;">
+                <label
+                    style="display: block; font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 8px;">Import
+                    To:</label>
+                <select id="import-target-select"
+                    style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-primary); color: var(--text-primary);">
+                    <option value="leads">Leads List</option>
+                    <option value="sales">Sales List</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer"
+            style="display: flex; gap: 12px; justify-content: flex-end; padding: 16px; border-top: 1px solid var(--border);">
+            <button class="btn secondary" id="cancel-import-btn">Cancel</button>
+            <button class="btn primary" id="confirm-import-btn" disabled>Import</button>
+        </div>
+    </div>
+    </div>
+
+    <!-- Gmail Connection Modal -->
+    <div class="modal-overlay" id="gmail-modal">
+        <div class="modal-content" style="max-width: 450px;">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i data-lucide="mail" style="color: #ea4335;"></i>
+                    <span>Gmail API Connection</span>
+                </div>
+                <button class="close-btn" id="close-gmail-modal"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                <!-- Unconnected View -->
+                <div id="gmail-unconnected-view" style="text-align: center; padding: 20px 0;">
+                    <div class="gmail-avatar" style="margin: 0 auto 20px;">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Gmail" alt="Gmail Avatar">
+                    </div>
+                    <p style="margin: 0 0 24px; font-size: 14px; color: var(--text-secondary);">
+                        Connect your Gmail account to send personalized outreach messages directly from the AI
+                        assistant.
+                    </p>
+                    <button class="btn primary" id="modal-gmail-connect-btn"
+                        style="background: #ea4335; border-color: #ea4335;">Connect Account</button>
+                </div>
+
+                <!-- Connected Banner View (from image) -->
+                <div id="gmail-connected-banner" class="gmail-banner" style="display: none;">
+                    <div class="banner-left">
+                        <i data-lucide="check-circle-2" class="banner-icon"></i>
+                        <span class="banner-text">Account connected</span>
+                    </div>
+                    <div class="banner-right">
+                        <span class="reconnect-label">Reconnect:</span>
+                        <button class="google-signin-btn" id="modal-gmail-reconnect-btn">
+                            <div class="google-icon-wrapper">
+                                <img class="google-icon"
+                                    src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+                                    alt="Google G" />
+                            </div>
+                            <span class="btn-text">Sign in with Google</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="signout-section" style="display: none; margin-top: 16px; text-align: center;">
+                    <button class="btn secondary" id="modal-gmail-signout-btn">Sign Out Account</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SheetJS for Excel handling -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+    <script src="script.js"></script>
+    <script src="sales-data.js"></script>
+    <script src="export-utils.js"></script>
+    <script src="gmail-api.js"></script>
+
+    <!-- Removed form-sync.js and qr-generator.js -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

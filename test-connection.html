@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connection Test - Gmail + Ollama</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .test-section h2 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status.pending {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .status.success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .status.error {
+            background: #f44336;
+            color: white;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result {
+            margin-top: 15px;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #333;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .result pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .info {
+            background: #e3f2fd;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 13px;
+            color: #1976d2;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🔌 Connection Verification</h1>
+        <p class="subtitle">Test your Gmail API and Ollama AI connections</p>
+
+        <!-- Ollama Test -->
+        <div class="test-section">
+            <h2>
+                🤖 Ollama AI
+                <span class="status pending" id="ollama-status">Not Tested</span>
+            </h2>
+            <button onclick="testOllama()">Test Ollama Connection</button>
+            <div class="result" id="ollama-result" style="display:none;"></div>
+        </div>
+
+        <!-- Gmail Test -->
+        <div class="test-section">
+            <h2>
+                📧 Gmail API
+                <span class="status pending" id="gmail-status">Not Connected</span>
+            </h2>
+            <button onclick="testGmail()" id="gmail-btn">Connect Gmail</button>
+            <button onclick="signOutGmail()" id="signout-btn" style="display:none;">Sign Out</button>
+            <div class="info">
+                <strong>Account:</strong> introvertpiratevampire@gmail.com<br>
+                <strong>Project ID:</strong> antigrav-486600
+            </div>
+            <div class="result" id="gmail-result" style="display:none;"></div>
+        </div>
+
+        <!-- Test Email Send -->
+        <div class="test-section">
+            <h2>
+                ✉️ Send Test Email
+                <span class="status pending" id="email-status">Not Sent</span>
+            </h2>
+            <button onclick="sendTestEmail()" id="send-email-btn" disabled>Send Test Email</button>
+            <div class="info">
+                Will send a test email using the new Gmail integration.
+            </div>
+            <div class="result" id="email-result" style="display:none;"></div>
+        </div>
+    </div>
+
+    <script src="gmail-api.js"></script>
+    <script>
+        // Test Ollama Connection
+        async function testOllama() {
+            const statusEl = document.getElementById('ollama-status');
+            const resultEl = document.getElementById('ollama-result');
+
+            statusEl.textContent = 'Testing...';
+            statusEl.className = 'status pending';
+            resultEl.style.display = 'block';
+            resultEl.innerHTML = 'Connecting to Ollama at http://localhost:11434...';
+
+            try {
+                const response = await fetch('http://localhost:11434/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        model: 'llama3.2',
+                        prompt: 'Say "Connection successful!" in one sentence.',
+                        stream: false
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                statusEl.textContent = 'Connected ✓';
+                statusEl.className = 'status success';
+                resultEl.innerHTML = `<strong>Success!</strong><br><br>Model: llama3.2<br>Response: ${data.response}`;
+            } catch (error) {
+                statusEl.textContent = 'Failed ✗';
+                statusEl.className = 'status error';
+                resultEl.innerHTML = `<strong>Error:</strong><br>${error.message}<br><br>Make sure Ollama is running: <code>ollama serve</code>`;
+            }
+        }
+
+        // Test Gmail Connection
+        function testGmail() {
+            handleGmailAuth();
+        }
+
+        function signOutGmail() {
+            handleGmailSignout();
+            updateGmailUIStatus(false);
+        }
+
+        // Override the updateGmailStatus function to update our test page
+        const originalUpdateStatus = updateGmailStatus;
+        updateGmailStatus = function (connected) {
+            if (originalUpdateStatus) originalUpdateStatus(connected);
+            updateGmailUIStatus(connected);
+        };
+
+        function updateGmailUIStatus(connected) {
+            const statusEl = document.getElementById('gmail-status');
+            const resultEl = document.getElementById('gmail-result');
+            const gmailBtn = document.getElementById('gmail-btn');
+            const signoutBtn = document.getElementById('signout-btn');
+            const sendEmailBtn = document.getElementById('send-email-btn');
+
+            if (connected) {
+                statusEl.textContent = 'Connected ✓';
+                statusEl.className = 'status success';
+                resultEl.style.display = 'block';
+                resultEl.innerHTML = '<strong>Success!</strong><br>Gmail API authenticated successfully with new credentials.';
+                gmailBtn.style.display = 'none';
+                signoutBtn.style.display = 'inline-block';
+                sendEmailBtn.disabled = false;
+            } else {
+                statusEl.textContent = 'Not Connected';
+                statusEl.className = 'status pending';
+                resultEl.style.display = 'none';
+                gmailBtn.style.display = 'inline-block';
+                signoutBtn.style.display = 'none';
+                sendEmailBtn.disabled = true;
+            }
+        }
+
+        // Send Test Email
+        async function sendTestEmail() {
+            const statusEl = document.getElementById('email-status');
+            const resultEl = document.getElementById('email-result');
+
+            statusEl.textContent = 'Sending...';
+            statusEl.className = 'status pending';
+            resultEl.style.display = 'block';
+            resultEl.innerHTML = 'Sending test email...';
+
+            // Ask user for recipient or use dummy if they just want to test connection
+            const recipient = prompt("Enter recipient email address:", "introvertpiratevampire@gmail.com");
+            if (!recipient) {
+                statusEl.textContent = 'Cancelled';
+                statusEl.className = 'status pending';
+                return;
+            }
+
+            const success = await sendEmailViaGmail(
+                recipient,
+                'Test Email from CRM Dashboard (New Credentials)',
+                'Hello!\n\nThis is a test email sent from your CRM Dashboard using the NEW Gmail API credentials.\n\nConnection verified!\n\nBest regards,\nYour CRM System'
+            );
+
+            if (success) {
+                statusEl.textContent = 'Sent ✓';
+                statusEl.className = 'status success';
+                resultEl.innerHTML = `<strong>Success!</strong><br>Test email sent to ${recipient}`;
+            } else {
+                statusEl.textContent = 'Failed ✗';
+                statusEl.className = 'status error';
+                resultEl.innerHTML = '<strong>Failed to send email.</strong><br>Check console for details.';
+            }
+        }
+    </script>
+</body>
+
+</html>
